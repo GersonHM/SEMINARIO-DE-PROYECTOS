@@ -1,8 +1,8 @@
 # SEMINARIO DE PROYECTOS
 
-CERRADURA AUTOMATICA CONTROLADA POR RFID Y BLUETOOTH
+*CERRADURA AUTOMÁTICA CONTROLADA POR RFID Y BLUETOOTH*
 ====================================================
- DESCRIPCION  : 
+ DESCRIPCIÓN  : 
  =
  es un sistema para activar una puerta atraves de un par de modulos, que apartir de 
  su funcionalidad en conjunto completaran una mayor seguridad para el acceso de 
@@ -15,7 +15,7 @@ CARACTERISTICAS:
 - versatilidad de manejo 
 - combinacion de tecnicas inalambricas 
 
-FUNCIONAMIENTO Y/O ACTIVACION :
+FUNCIONAMIENTO Y/O ACTIVACIÓN :
 =
 - el modo de uso es muy simple debido a la gran facilidad que proporcionan
 los modulos anteriormente mencionados , a esto sumado una programacion de los mismos 
