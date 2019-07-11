@@ -4,9 +4,9 @@
 ====================================================
 INTEGRANTES:
 =
-Ayala Ramirez Erika
-Caballero Ávila Arturo
-Hernández Mercado Gerson Guadalupe
+- Ayala Ramirez Erika
+- Caballero Ávila Arturo
+- Hernández Mercado Gerson Guadalupe
 
  DESCRIPCIÓN: 
  =
