@@ -2,7 +2,13 @@
 
 *CERRADURA AUTOMÁTICA CONTROLADA POR RFID Y BLUETOOTH*
 ====================================================
- DESCRIPCIÓN  : 
+INTEGRANTES:
+=
+Ayala Ramirez Erika
+Caballero Ávila Arturo
+Hernández Mercado Gerson Guadalupe
+
+ DESCRIPCIÓN: 
  =
  es un sistema para activar una puerta atraves de un par de modulos, que apartir de 
  su funcionalidad en conjunto completaran una mayor seguridad para el acceso de 
