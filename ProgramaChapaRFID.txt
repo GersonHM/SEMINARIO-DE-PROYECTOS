@@ -1,0 +1,161 @@
+#include <MFRC522.h>
+#include <SPI.h>
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////parte blue/////////////
+//Variables asociadas a los dos LEDs que se van a controlar
+int led_1 = 7;
+
+char valor;  //Variable para indicar que llega una orden
+
+///////////////////////////////////////////////////////////////////////
+#define SAD 10
+#define RST 5
+MFRC522 nfc(SAD, RST);
+
+int ledPinAbierto = 2;
+int ledPinCerrado = 3;
+
+///////////////////////////////////////////////
+void setup() {
+ //////////////////////////////////////////////////////parte blue///
+               pinMode(led_1, OUTPUT);
+                
+ ////////////////////////////////////////////////////////////
+  pinMode(ledPinAbierto  , OUTPUT);   
+  pinMode(ledPinCerrado, OUTPUT);   
+  SPI.begin();
+  //Serial.begin(115200);
+  Serial.begin(9600);
+  Serial.println(".... RC522");
+  Serial.println(" Control de acceso Caballero & Ayala ");
+  nfc.begin();
+  byte version = nfc.getFirmwareVersion();
+  if (! version) {//Entra si no encuentra el módulo.
+    Serial.print("No encontrado modulo RC522");
+    while(1); //detener
+  }
+
+  Serial.print("encontrado modulo RC522");
+  //Serial.print("Firmware version 0x");
+  Serial.print(" version 0x");
+  Serial.print(version, HEX);
+  Serial.println(".");
+}
+
+#define AUTHORIZED_COUNT 2 //Para autoriazar más tarjetas ponemos el número aqui y la añadimos abajo
+byte Authorized[AUTHORIZED_COUNT][6] = {
+
+                            //{0x83, 0xF4, 0x8D, 0xC6, 0x3C,},
+                            //{ 0xC, 0x9E, 0x25, 0xD9, 0x6E,},////////llavero
+                            { 0x70, 0xF0, 0x1D, 0xA4, 0x39,}////////tarjeta
+                            
+                           //,{0x10, 0x14, 0x39, 0x2E, 0xFF, 0xFF, } ejemplo de como autorizar más tarjetas  0x83,.....
+                            
+                          };
+                          
+void printSerial(byte *serial);
+boolean isSame(byte *key, byte *serial);
+boolean isAuthorized(byte *serial);
+
+
+
+void loop() {
+  
+
+     
+  //////////////////////////////////////parte bluetooth///////////////////////////
+    if (Serial.available())  //Si el puerto serie (Bluetooth) está disponible
+  {
+    valor = Serial.read();  //Lee el dato entrante via Bluetooth
+     
+
+    if (valor == 'a')   //Si el dato que llega es una a
+    {
+      digitalWrite(led_1, HIGH);  //Enciende el LED 1
+      delay (200);
+    }
+      /////////////////////////////////////////////////////////////////////////pueba de apagado 
+      //else{ 
+            //digitalWrite(led_1, LOW); 
+      
+      //  }
+       ////////////////////////////////////////////////////////////////////
+      //}
+     
+    
+    if (valor == 'p')   //Si el dato que llega es una p
+    {
+      digitalWrite(led_1, LOW);   //Apaga el LED 1 
+     
+     }
+
+    
+  }
+ 
+  ///////////////////////////////////////////////////////////////////////////////////////
+  byte status;
+  byte data[MAX_LEN];
+  byte serial[5];
+  boolean Abierto = false;
+  digitalWrite(ledPinAbierto, Abierto);
+  digitalWrite(ledPinCerrado, !Abierto);
+  status = nfc.requestTag(MF1_REQIDL, data);
+
+  if (status == MI_OK) {
+    status = nfc.antiCollision(data);
+    memcpy(serial, data, 5);
+    
+    if(isAuthorized(serial))
+    { 
+      Serial.println("Autorizado");
+      Abierto = true;
+    }
+    else
+    { 
+      printSerial(serial);
+      Serial.println(" NO Autorizado  Solicite Ayuda¡ ");
+      Abierto = false;
+    }
+    
+    nfc.haltTag();
+    digitalWrite(ledPinAbierto, Abierto);
+    digitalWrite(ledPinCerrado, !Abierto);
+    delay(2000);
+  }//if (status == MI_OK)
+
+  delay(1000);
+
+}//void loop()
+
+boolean isSame(byte *key, byte *serial)
+{
+    for (int i = 0; i < 5; i++) {
+      if (key[i] != serial[i])
+      { 
+        return false; 
+      }
+    }
+    
+    return true;
+
+}
+
+boolean isAuthorized(byte *serial)
+{
+    for(int i = 0; i<AUTHORIZED_COUNT; i++)
+    {
+      if(isSame(serial, Authorized[i]))
+        return true;
+    }
+   return false;
+}
+
+void printSerial(byte *serial)
+{
+        Serial.print("Serial:");
+    for (int i = 0; i < 5; i++) {// aumentar a 5 para leer el número de la tarjeta completo
+      Serial.print(serial[i], HEX);
+      Serial.print(" ");
+    }
+}
